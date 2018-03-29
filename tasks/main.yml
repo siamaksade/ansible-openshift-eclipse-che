@@ -36,5 +36,5 @@
 
 # install eclipse che
 - name: deploy eclipse che template
-  shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} IMAGE_CHE_SERVER={{ che_version }} --param PROJECT_NAME={{ project_name }} --param DOMAIN_NAME={{ apps_hostname_suffix }}"
+  shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} IMAGE_CHE_SERVER={{ che_version }} --param PROJECT_NAME={{ project_name }} --param DOMAIN_NAME=che-{{project_name}}.{{ route_suffix }}"
   ignore_errors: true

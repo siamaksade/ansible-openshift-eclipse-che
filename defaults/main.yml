@@ -6,6 +6,6 @@ project_display_name: Eclipse Che IDE
 project_desc: Eclipse Che IDE
 # project_annotations:
 
-apps_hostname_suffix: 127.0.0.1.nip.io
+route_suffix: 127.0.0.1.nip.io
 
 openshift_cli: oc
