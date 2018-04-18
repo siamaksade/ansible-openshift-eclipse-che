@@ -1,7 +1,6 @@
 ---
 ## Eclipse Che Web IDE Install
 
-# create project
 - name: check if eclipse che project {{ project_name }} exists
   shell: "{{ openshift_cli }} get project {{ project_name }}"
   register: project_result
@@ -30,11 +29,8 @@
     - project_annotations is not none
     - project_annotations|trim() != ""    
 
-# import eclispe che template
-- name: import eclipse che template
-  shell: "{{ openshift_cli }} apply -f https://raw.githubusercontent.com/minishift/minishift-addons/master/add-ons/che/templates/che-single-user.yml -n {{ project_name }}"
+- include_tasks: single_user.yml
+  when: not multi_user|bool
 
-# install eclipse che
-- name: deploy eclipse che template
-  shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} -p IMAGE_CHE_SERVER=eclipse/che-server:{{ che_version }} -p PROJECT_NAME={{ project_name }} -p DOMAIN_NAME={{ route_suffix }}"
-  ignore_errors: true
+- include_tasks: multi_user.yml
+  when: multi_user|bool

@@ -1,0 +1,11 @@
+---
+## Eclipse Che Web IDE Install - Single User
+
+# import eclispe che template
+- name: import eclipse che template
+  shell: "{{ openshift_cli }} apply -f https://raw.githubusercontent.com/minishift/minishift-addons/master/add-ons/che/templates/che-single-user.yml -n {{ project_name }}"
+
+# install eclipse che
+- name: deploy eclipse che template
+  shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} -p IMAGE_CHE_SERVER=eclipse/che-server:{{ che_version }} -p PROJECT_NAME={{ project_name }} -p DOMAIN_NAME={{ route_suffix }}"
+  ignore_errors: true
