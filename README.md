@@ -5,7 +5,11 @@ Ansible Role: Eclipse Che on OpenShift
 Ansible Role for deploying [Eclipse Che](https://www.eclipse.org/che/) web-based IDE in 
 single-user mode on OpenShift. 
 
-**NOTE:** Multi-user installation requires you to be authentication to OpenShift as a cluster admin user (but not `system:admin`). Single-user installation can be done as any user and does NOT required cluster admin.
+**NOTE:** Multi-user installation requires you to be authentication to OpenShift as a cluster admin user (but not `system:admin`). Single-user installation can be done as any user and does NOT required cluster admin. 
+
+In multi-user mode, KeyCloak is deployed for user management and the admin username and password is set to `admin/admin`
+
+
 
 Role Variables
 ------------
@@ -25,8 +29,6 @@ Role Variables
 |`multi_user_che_tls`            | false            | Optional | For multi-user mode, enable TLS  |
 |`multi_user_che_protocol`       | http             | Optional | For multi-user mode, `http` or `https` protocol |
 |`multi_user_che_ws_protocol`    | ws               | Optional | For multi-user mode, `ws` or `wss` protocol |
-|`multi_user_keycloak_admin_user`| admin            | Optional | For multi-user mode, KeyCloak admin user to be created |
-|`multi_user_keycloak_admin_pwd` | admin            | Optional | For multi-user mode, KeyCloak admin password to be created |
 |`openshift_cli`                 | oc               | Optional | OpenShift CLI command and arguments (e.g. auth)       | 
 
 

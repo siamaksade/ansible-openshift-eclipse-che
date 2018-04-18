@@ -44,8 +44,6 @@
         -p CHE_VERSION={{ che_version }} \
         -p ROUTING_SUFFIX={{ route_suffix }} \
         -n {{ project_name }}
-
-    {{ openshift_cli }} set env dc/keycloak KEYCLOAK_USER={{ multi_user_keycloak_admin_user }} KEYCLOAK_PASSWORD={{ multi_user_keycloak_admin_pwd }} -n {{ project_name }}
   ignore_errors: true
 
 - name: wait for keycloak to be running
