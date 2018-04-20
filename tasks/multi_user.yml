@@ -70,6 +70,7 @@
           -p TLS={{ multi_user_che_tls }} \
           -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
           -p PROTOCOL={{ multi_user_che_protocol }} \
+          -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
           -n {{ project_name }}
     {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
@@ -93,6 +94,7 @@
           -p TLS={{ multi_user_che_tls }} \
           -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
           -p PROTOCOL={{ multi_user_che_protocol }} \
+          -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
           -n {{ project_name }}
     {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
