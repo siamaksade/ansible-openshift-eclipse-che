@@ -44,6 +44,8 @@
         -p CHE_VERSION={{ che_version }} \
         -p ROUTING_SUFFIX={{ route_suffix }} \
         -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
+        -p KEYCLOAK_USER={{ keycloak_admin_user }} \
+        -p KEYCLOAK_PASSWORD={{ keycloak_admin_pwd }} \
         -n {{ project_name }}
   ignore_errors: true
 

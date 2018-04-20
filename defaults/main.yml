@@ -20,3 +20,6 @@ openshift_admin_pwd:
 multi_user_che_tls: false
 multi_user_che_protocol: http
 multi_user_che_ws_protocol: ws
+
+keycloak_admin_user: admin
+keycloak_admin_pwd: admin
