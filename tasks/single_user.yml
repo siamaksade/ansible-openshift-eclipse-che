@@ -9,3 +9,6 @@
 - name: deploy eclipse che template
   shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} -p IMAGE_CHE_SERVER=eclipse/che-server:{{ che_version }} -p PROJECT_NAME={{ project_name }} -p DOMAIN_NAME={{ route_suffix }}"
   ignore_errors: true
+
+- include_tasks: add_stack_single.yml
+  when: install_java_oc_stack|bool

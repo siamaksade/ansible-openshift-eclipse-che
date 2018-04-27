@@ -23,3 +23,5 @@ multi_user_che_ws_protocol: ws
 
 keycloak_admin_user: admin
 keycloak_admin_pwd: admin
+
+install_java_oc_stack: false

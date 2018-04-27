@@ -55,7 +55,7 @@
     status_code: 200
   register: result
   until: result.status == 200
-  retries: 10
+  retries: 60
   delay: 30
 
 - name: create persistent volume claim for eclipse che
@@ -113,6 +113,9 @@
     status_code: 200
   register: result
   until: result.status == 200
-  retries: 10
+  retries: 60
   delay: 30
+
+- include_tasks: add_stack_multi.yml
+  when: install_java_oc_stack|bool
 

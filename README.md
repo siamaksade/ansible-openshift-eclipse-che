@@ -31,6 +31,7 @@ Role Variables
 |`multi_user_che_ws_protocol` | `ws`               | Optional | For multi-user mode, `ws` or `wss` protocol |
 |`keycloak_admin_user`        | `admin`            | Optional | For multi-user mode, Keycloak admin user to be created |
 |`keycloak_admin_user`        | `admin`            | Optional | For multi-user mode, Keycloak admin password to be created |
+|`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
 |`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
 
 
