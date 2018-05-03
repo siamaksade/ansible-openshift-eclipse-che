@@ -38,3 +38,10 @@
 - name: deploy eclipse che template
   shell: "{{ openshift_cli }} new-app che-single-user -n {{ project_name }} -p IMAGE_CHE_SERVER=eclipse/che-server:{{ che_version }} -p PROJECT_NAME={{ project_name }} -p DOMAIN_NAME={{ route_suffix }}"
   ignore_errors: true
+
+- name: adjust eclipse che resources
+  shell: |
+    {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
+    {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
+    {{ openshift_cli }} set resources dc/che --limits=cpu=2,memory=2Gi -n {{ project_name }}
+  ignore_errors: true
