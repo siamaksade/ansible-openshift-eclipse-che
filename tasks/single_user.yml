@@ -14,7 +14,7 @@
   shell: |
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
-    {{ openshift_cli }} set resources dc/che --limits=cpu=2,memory=2Gi -n {{ project_name }}
+    {{ openshift_cli }} set resources dc/che --requests=cpu=200m,memory=512Mi --limits=cpu=2,memory=2Gi -n {{ project_name }}
   ignore_errors: true
 
 - include_tasks: add_stack_single.yml

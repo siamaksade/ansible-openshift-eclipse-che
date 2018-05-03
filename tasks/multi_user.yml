@@ -100,7 +100,7 @@
     {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
-    {{ openshift_cli }} set resources dc/che --limits=cpu=2,memory=2Gi -n {{ project_name }}
+    {{ openshift_cli }} set resources dc/che --requests=cpu=200m,memory=512Mi --limits=cpu=2,memory=2Gi -n {{ project_name }}
   ignore_errors: true
   when: 
     - openshift_admin_user is defined
