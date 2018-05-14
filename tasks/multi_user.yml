@@ -1,39 +1,6 @@
 ---
 ## Eclipse Che Web IDE Install - Multi-user
 
-- name: check to be logged in as cluster admin
-  shell: "{{ openshift_cli }} get project default"
-  ignore_errors: true
-  register: loggedin_as_admin
-  when: >
-    openshift_admin_user is not defined or
-    openshift_admin_user is none or
-    openshift_admin_user|trim() == ""
-
-- name: check the loggined in user
-  shell: "{{ openshift_cli }} whoami"
-  register: loggedin_user
-  when: >
-    openshift_admin_user is not defined or
-    openshift_admin_user is none or
-    openshift_admin_user|trim() == ""
-
-- name: fail if not admin or logged in as system:admin
-  fail:
-    msg: "Multi-user installation requires you to be authenticated as a cluster admin user (not 'system:admin')"
-  when: >
-    (loggedin_as_admin is failed or loggedin_user == "system:admin") and 
-    (openshift_admin_user is not defined or openshift_admin_user is none or openshift_admin_user|trim() == "")
-
-- name: extract openshift admin token
-  shell: "{{ openshift_cli }} whoami -t"
-  register: openshift_token
-  changed_when: false
-  when: >
-    openshift_admin_user is not defined or
-    openshift_admin_user is none or
-    openshift_admin_user|trim() == ""
-
 - name: deploy postgresql for eclipse che and keycloak
   shell: "{{ openshift_cli }} new-app -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -n {{ project_name }}"
   ignore_errors: true
@@ -68,7 +35,6 @@
           -p ROUTING_SUFFIX={{ route_suffix }} \
           -p CHE_MULTIUSER=true \
           -p CHE_VERSION={{ che_version }} \
-          -p OPENSHIFT_TOKEN={{ openshift_token.stdout }} \
           -p CHE_INFRA_OPENSHIFT_PROJECT={{ project_name }} \
           -p TLS={{ multi_user_che_tls }} \
           -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
@@ -79,33 +45,6 @@
     {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
     {{ openshift_cli }} set resources dc/che --limits=cpu=2,memory=2Gi -n {{ project_name }}
   ignore_errors: true
-  when: >
-    openshift_admin_user is not defined or
-    openshift_admin_user is none or
-    openshift_admin_user|trim() == ""
-
-- name: deploy eclipse che with username and password
-  shell: |
-    {{ openshift_cli }} new-app -f {{ che_templates_base }}/che-server-template.yaml \
-          -p ROUTING_SUFFIX={{ route_suffix }} \
-          -p CHE_MULTIUSER=true \
-          -p CHE_VERSION={{ che_version }} \
-          -p OPENSHIFT_USERNAME={{ openshift_admin_user }} \
-          -p OPENSHIFT_PASSWORD={{ openshift_admin_pwd }} \
-          -p CHE_INFRA_OPENSHIFT_PROJECT={{ project_name }} \
-          -p TLS={{ multi_user_che_tls }} \
-          -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
-          -p PROTOCOL={{ multi_user_che_protocol }} \
-          -n {{ project_name }}
-    {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
-    {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
-    {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
-    {{ openshift_cli }} set resources dc/che --requests=cpu=200m,memory=512Mi --limits=cpu=2,memory=2Gi -n {{ project_name }}
-  ignore_errors: true
-  when: 
-    - openshift_admin_user is defined
-    - openshift_admin_user is not none
-    - openshift_admin_user|trim() != ""
 
 - name: wait for che to be running
   uri:
