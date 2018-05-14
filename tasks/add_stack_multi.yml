@@ -3,7 +3,7 @@
 
 - name: get auth token from keycloak
   uri:
-    url: http://keycloak-{{ lab_infra_project }}.{{ apps_hostname_suffix }}/auth/realms/che/protocol/openid-connect/token
+    url: http://keycloak-{{ project_name }}.{{ apps_hostname_suffix }}/auth/realms/che/protocol/openid-connect/token
     method: POST
     body: "username={{ keycloak_admin_user }}&password={{ keycloak_admin_pwd }}&grant_type=password&client_id=admin-cli"
     status_code: 200
@@ -13,7 +13,7 @@
 
 - name: create custom stack for jdk and openshift cli
   uri:
-    url: http://che-{{ lab_infra_project }}.{{ apps_hostname_suffix }}/api/stack
+    url: http://che-{{ project_name }}.{{ apps_hostname_suffix }}/api/stack
     method: POST
     body: "{{ lookup('file','files/che-stack.json') }}"
     body_format: json
@@ -32,7 +32,7 @@
 
 - name: give all users access to the stack
   uri:
-    url: http://che-{{ lab_infra_project }}.{{ apps_hostname_suffix }}/api/permissions
+    url: http://che-{{ project_name }}.{{ apps_hostname_suffix }}/api/permissions
     method: POST
     body: "{{ lookup('file','/tmp/che-permissions.json') }}"
     body_format: json
