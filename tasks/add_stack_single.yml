@@ -3,7 +3,7 @@
 
 - name: create custom stack for jdk and openshift cli
   uri:
-    url: http://che-{{ lab_infra_project }}.{{ apps_hostname_suffix }}/api/stack
+    url: http://che-{{ project_name }}.{{ apps_hostname_suffix }}/api/stack
     method: POST
     body: "{{ lookup('file','files/che-stack.json') }}"
     body_format: json
