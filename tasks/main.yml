@@ -27,7 +27,10 @@
     - project_result|failed
     - project_annotations is defined
     - project_annotations is not none
-    - project_annotations|trim() != ""    
+    - project_annotations|trim() != ""  
+
+- name: assign che serviceaccount as project admin
+  shell: "{{ openshift_cli }} adm policy add-role-to-user admin system:serviceaccount:{{ project_name }}:che -n {{ project_name }}"
 
 - include_tasks: single_user.yml
   when: not multi_user|bool
