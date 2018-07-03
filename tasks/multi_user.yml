@@ -2,19 +2,19 @@
 ## Eclipse Che Web IDE Install - Multi-user
 
 - name: deploy postgresql for eclipse che and keycloak
-  shell: "{{ openshift_cli }} new-app -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -l app=che -n {{ project_name }}"
+  shell: "{{ openshift_cli }} process -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -l app=che -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}"
   ignore_errors: true
 
 - name: deploy keycloak
   shell: |
-    {{ openshift_cli }} new-app -f {{ che_templates_base }}/multi/keycloak-template.yaml \
+    {{ openshift_cli }} process -f {{ che_templates_base }}/multi/keycloak-template.yaml \
         -p CHE_VERSION={{ che_version }} \
         -p ROUTING_SUFFIX={{ route_suffix }} \
         -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
         -p KEYCLOAK_USER={{ keycloak_admin_user }} \
         -p KEYCLOAK_PASSWORD={{ keycloak_admin_pwd }} \
         -l app=che \
-        -n {{ project_name }}
+        -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}
   ignore_errors: true
 
 - name: wait for keycloak to be running
@@ -32,7 +32,7 @@
 
 - name: deploy eclipse che with token
   shell: |
-    {{ openshift_cli }} new-app -f {{ che_templates_base }}/che-server-template.yaml \
+    {{ openshift_cli }} process -f {{ che_templates_base }}/che-server-template.yaml \
           -p ROUTING_SUFFIX={{ route_suffix }} \
           -p CHE_MULTIUSER=true \
           -p CHE_VERSION={{ che_version }} \
@@ -41,7 +41,7 @@
           -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
           -p PROTOCOL={{ multi_user_che_protocol }} \
           -l app=che \
-          -n {{ project_name }}
+          -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}
     {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --liveness --initial-delay-seconds=180 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
