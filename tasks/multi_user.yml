@@ -2,7 +2,7 @@
 ## Eclipse Che Web IDE Install - Multi-user
 
 - name: deploy postgresql for eclipse che and keycloak
-  shell: "{{ openshift_cli }} new-app -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -n {{ project_name }}"
+  shell: "{{ openshift_cli }} new-app -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -l app=che -n {{ project_name }}"
   ignore_errors: true
 
 - name: deploy keycloak
@@ -13,6 +13,7 @@
         -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
         -p KEYCLOAK_USER={{ keycloak_admin_user }} \
         -p KEYCLOAK_PASSWORD={{ keycloak_admin_pwd }} \
+        -l app=che \
         -n {{ project_name }}
   ignore_errors: true
 
@@ -39,6 +40,7 @@
           -p TLS={{ multi_user_che_tls }} \
           -p WS_PROTOCOL={{ multi_user_che_ws_protocol }} \
           -p PROTOCOL={{ multi_user_che_protocol }} \
+          -l app=che \
           -n {{ project_name }}
     {{ openshift_cli }} set volume dc/che --add -m /data --name=che-data-volume --claim-name=che-data-volume -n {{ project_name }}
     {{ openshift_cli }} set probe dc/che --readiness --initial-delay-seconds=60 --failure-threshold=10 --period-seconds=30 -n {{ project_name }}
