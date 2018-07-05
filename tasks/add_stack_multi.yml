@@ -1,11 +1,14 @@
 ---
 ## Add Java and OpenShift CLI Stack
 
+# TODO:
+# When https://github.com/eclipse/che/issues/10274 is fixed
+# set the body to {{ keycloak_admin_user }}&password={{ keycloak_admin_pwd }}&...
 - name: get auth token from keycloak
   uri:
     url: http://keycloak-{{ project_name }}.{{ apps_hostname_suffix }}/auth/realms/che/protocol/openid-connect/token
     method: POST
-    body: "username={{ keycloak_admin_user }}&password={{ keycloak_admin_pwd }}&grant_type=password&client_id=admin-cli"
+    body: "username=admin&password=admin&grant_type=password&client_id=admin-cli"
     status_code: 200
     headers:
       Content-Type: "application/x-www-form-urlencoded"
