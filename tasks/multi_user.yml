@@ -57,6 +57,40 @@
   retries: 60
   delay: 30
 
+- name: get auth token from keycloak
+  uri:
+    url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/realms/master/protocol/openid-connect/token
+    method: POST
+    body_format: form-urlencoded
+    body: 
+      username: "{{ keycloak_che_realm_user }}"
+      password: "{{ keycloak_che_realm_password }}"
+      grant_type: password
+      client_id: admin-cli
+    status_code: 200
+  register: access_token_result
+
+- set_fact:
+    access_token_bearer: "{{ access_token_result.json | json_query('access_token') }}"
+
 - include_tasks: add_stack_multi.yml
   when: install_java_oc_stack|bool
 
+- name: Pre-create {{ che_generate_user_count }} users in che realm with format ({{ che_generate_user_format }})
+  uri:
+    url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/admin/realms/che/users
+    method: POST
+    body: "{{ lookup('template','che-user.json.j2') }}"
+    body_format: json
+    status_code: 201
+    headers:
+      Authorization: "Bearer {{ access_token_bearer }}"
+      Content-Type: "application/json"
+  vars:
+    username: "{{ item }}"
+    first_name: "{{ item }}"
+    last_name: ""
+    email: "{{ item }}@none.com"
+    password: "{{ che_generate_user_password }}"
+  with_sequence: start={{ che_generate_user_count|int if che_generate_user_count|int < 1 else 1}} end={{ che_generate_user_count }} format={{ che_generate_user_format }}
+  when: che_generate_user_count|int > 0

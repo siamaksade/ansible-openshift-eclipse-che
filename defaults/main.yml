@@ -24,4 +24,11 @@ multi_user_che_ws_protocol: ws
 keycloak_admin_user: admin
 keycloak_admin_pwd: admin
 
+keycloak_che_realm_user: admin
+keycloak_che_realm_password: admin
+
+che_generate_user_count: 0
+che_generate_user_format: "user%d"
+che_generate_user_password: password
+
 install_java_oc_stack: false

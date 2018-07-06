@@ -1,44 +1,27 @@
 ---
 ## Add Java and OpenShift CLI Stack
-
-# TODO:
-# When https://github.com/eclipse/che/issues/10274 is fixed
-# set the body to {{ keycloak_admin_user }}&password={{ keycloak_admin_pwd }}&...
-- name: get auth token from keycloak
-  uri:
-    url: http://keycloak-{{ project_name }}.{{ apps_hostname_suffix }}/auth/realms/che/protocol/openid-connect/token
-    method: POST
-    body: "username=admin&password=admin&grant_type=password&client_id=admin-cli"
-    status_code: 200
-    headers:
-      Content-Type: "application/x-www-form-urlencoded"
-  register: access_token_result
-
 - name: create custom stack for jdk and openshift cli
   uri:
-    url: http://che-{{ project_name }}.{{ apps_hostname_suffix }}/api/stack
+    url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
     method: POST
     body: "{{ lookup('file','files/che-stack.json') }}"
     body_format: json
     status_code: 200,201
     headers:
-      Authorization: "Bearer {{ access_token_result.json | json_query('access_token') }}"
+      Authorization: "Bearer {{ access_token_bearer }}"
   register: stack_json
 
 - set_fact:
     stack_id: "{{ stack_json.json|json_query('id') }}"
 
-- name: process che permission json
-  template:
-    src: files/che-permissions.json.j2
-    dest: "/tmp/che-permissions.json"
-
 - name: give all users access to the stack
   uri:
-    url: http://che-{{ project_name }}.{{ apps_hostname_suffix }}/api/permissions
+    url: http://che-{{ project_name }}.{{ route_suffix }}/api/permissions
     method: POST
-    body: "{{ lookup('file','/tmp/che-permissions.json') }}"
+    body: "{{ lookup('template','files/che-permissions.json.j2') }}"
     body_format: json
     status_code: 204
     headers:
-      Authorization: "Bearer {{ access_token_result.json | json_query('access_token') }}"
+      Authorization: "Bearer {{ access_token_bearer }}"
+  vars:
+    stack_id: "{{ stack_id }}"

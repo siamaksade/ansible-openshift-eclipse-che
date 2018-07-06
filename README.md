@@ -23,6 +23,9 @@ Role Variables
 |`multi_user_che_ws_protocol` | `ws`               | Optional | For multi-user mode, `ws` or `wss` protocol |
 |`keycloak_admin_user`        | `admin`            | Optional | For multi-user mode, Keycloak admin user to be created |
 |`keycloak_admin_pwd`         | `admin`            | Optional | For multi-user mode, Keycloak admin password to be created |
+|`che_generate_user_count`    | `0`                | Optional | For multi-user mode, number of users to be pre-created in che realm |
+|`che_generate_user_format`   | `user%d`           | Optional | For multi-user mode, format for the usernames for the users to be pre-created in che realm |
+|`che_generate_user_password` | `password`         | Optional | For multi-user mode, password for the users to be pre-created in che realm |
 |`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
 |`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
 
