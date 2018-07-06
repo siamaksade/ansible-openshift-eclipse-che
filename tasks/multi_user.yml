@@ -57,7 +57,7 @@
   retries: 60
   delay: 30
 
-- name: get auth token from keycloak
+- name: get auth token from keycloak master realm
   uri:
     url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/realms/master/protocol/openid-connect/token
     method: POST
@@ -65,10 +65,21 @@
     status_code: 200
     headers:
       Content-Type: "application/x-www-form-urlencoded"
-  register: access_token_result
+  register: master_access_token_result
+
+- name: get auth token from keycloak che realm
+  uri:
+    url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/realms/che/protocol/openid-connect/token
+    method: POST
+    body: "username={{ keycloak_che_realm_user }}&password={{ keycloak_che_realm_password }}&grant_type=password&client_id=admin-cli"
+    status_code: 200
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
+  register: che_access_token_result
 
 - set_fact:
-    access_token_bearer: "{{ access_token_result.json | json_query('access_token') }}"
+    master_access_token_bearer: "{{ master_access_token_result.json | json_query('access_token') }}"
+    che_access_token_bearer: "{{ che_access_token_result.json | json_query('access_token') }}"
 
 - include_tasks: add_stack_multi.yml
   when: install_java_oc_stack|bool
@@ -81,7 +92,7 @@
     body_format: json
     status_code: 201
     headers:
-      Authorization: "Bearer {{ access_token_bearer }}"
+      Authorization: "Bearer {{ master_access_token_bearer }}"
       Content-Type: "application/json"
   vars:
     username: "{{ item }}"
