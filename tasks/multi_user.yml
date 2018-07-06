@@ -61,13 +61,10 @@
   uri:
     url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/realms/master/protocol/openid-connect/token
     method: POST
-    body_format: form-urlencoded
-    body: 
-      username: "{{ keycloak_che_realm_user }}"
-      password: "{{ keycloak_che_realm_password }}"
-      grant_type: password
-      client_id: admin-cli
+    body: "username={{ keycloak_che_realm_user }}&password={{ keycloak_che_realm_password }}&grant_type=password&client_id=admin-cli"
     status_code: 200
+    headers:
+      Content-Type: "application/x-www-form-urlencoded"
   register: access_token_result
 
 - set_fact:
