@@ -3,6 +3,17 @@
      that: "route_suffix is defined"
      msg: "route_suffix is a required parameter, you need to provide it"
 
+- debug:
+    msg: 
+      - Provisioning Che 
+      - Version({{ che_version }})
+      - In project({{ project_name }})
+      - Route_suffix({{ route_suffix }})
+      - Multi_user({{ multi_user }})
+      - Install java oc stack({{ install_java_oc_stack }})
+      - Keycloack admin({{ keycloak_admin_user }}/{{ keycloak_admin_pwd }})
+      - Install java oc stack({{ install_java_oc_stack }})
+      - Generate ({{ che_generate_user_count }}) users with format({{che_generate_user_format}}) and password({{che_generate_user_password}})
      ## Eclipse Che Web IDE Install
 
 - name: check if eclipse che project {{ project_name }} exists
