@@ -1,5 +1,5 @@
 Ansible Role: Eclipse Che on OpenShift
-[![Build Status](https://travis-ci.org/siamaksade/ansible-openshift-che.svg?branch=master)](https://travis-ci.org/siamaksade/ansible-openshift-che)
+[![Build Status](https://travis-ci.org/siamaksade/ansible-openshift-eclipse-che.svg?branch=master)](https://travis-ci.org/siamaksade/ansible-openshift-eclipse-che)
 =========
 
 Ansible Role for deploying [Eclipse Che](https://www.eclipse.org/che/) web-based IDE in 
