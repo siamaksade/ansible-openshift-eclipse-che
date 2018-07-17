@@ -82,7 +82,6 @@
     che_access_token_bearer: "{{ che_access_token_result.json | json_query('access_token') }}"
 
 - include_tasks: add_stack_multi.yml
-  when: install_java_oc_stack|bool
 
 - name: pre-create {{ che_generate_user_count }} users in che realm with format ({{ che_generate_user_format }})
   uri:

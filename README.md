@@ -27,6 +27,7 @@ Role Variables
 |`che_generate_user_format`   | `user%d`           | Optional | For multi-user mode, format for the usernames for the users to be pre-created in che realm |
 |`che_generate_user_password` | `password`         | Optional | For multi-user mode, password for the users to be pre-created in che realm |
 |`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
+|`install_custom_stack`       | -                  | Optional | Install a custom stack. The value is the http url of the stack e.g. http://raw.github.com/somerepo/stack.json |
 |`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
 
 
