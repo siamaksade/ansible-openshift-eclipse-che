@@ -39,7 +39,7 @@
     },
     "commands": [
       {
-        "commandLine": "mvn install -f ${current.project.path}",
+        "commandLine": "mvn package -f ${current.project.path}",
         "name": "build",
         "type": "mvn",
         "attributes": {
@@ -57,30 +57,12 @@
         }
       },
       {
-        "commandLine": "mvn clean install -f ${current.project.path}",
+        "commandLine": "mvn clean package -f ${current.project.path}",
         "name": "clean build",
         "type": "mvn",
         "attributes": {
           "goal": "Build",
           "previewUrl": ""
-        }
-      },
-      {
-        "commandLine": "mvn spring-boot:run -f ${current.project.path}",
-        "name": "run",
-        "type": "custom",
-        "attributes": {
-          "goal": "Run",
-          "previewUrl": "${server.8080/tcp}"
-        }
-      },
-      {
-        "commandLine": "mvn spring-boot:run -f ${current.project.path} -Drun.jvmArguments=\"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005\"",
-        "name": "debug",
-        "type": "custom",
-        "attributes": {
-          "goal": "Debug",
-          "previewUrl": "${server.8080/tcp}"
         }
       }
     ],
@@ -107,7 +89,7 @@
       "name": "Ansible"
     },
     {
-      "version": "3.9.14",
+      "version": "3.9",
       "name": "OpenShift CLI"
     }
   ],

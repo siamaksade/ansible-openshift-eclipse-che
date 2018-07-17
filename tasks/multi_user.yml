@@ -84,7 +84,7 @@
 - include_tasks: add_stack_multi.yml
   when: install_java_oc_stack|bool
 
-- name: Pre-create {{ che_generate_user_count }} users in che realm with format ({{ che_generate_user_format }})
+- name: pre-create {{ che_generate_user_count }} users in che realm with format ({{ che_generate_user_format }})
   uri:
     url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/admin/realms/che/users
     method: POST
