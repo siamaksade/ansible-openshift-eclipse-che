@@ -1,18 +1,18 @@
 ---
-## Add Java and OpenShift CLI Stack
-- name: create custom stack for jdk and openshift cli
+## add a stack and set permissions
+- name: add stack
   uri:
     url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
     method: POST
-    body: "{{ lookup('file','files/che-stack.json') }}"
+    body: "{{ stack_json }}"
     body_format: json
     status_code: 200,201
     headers:
       Authorization: "Bearer {{ che_access_token_bearer }}"
-  register: stack_json
+  register: stack_json_result
 
 - set_fact:
-    stack_id: "{{ stack_json.json|json_query('id') }}"
+    stack_id: "{{ stack_json_result.json|json_query('id') }}"
 
 - name: give all users access to the stack
   uri:

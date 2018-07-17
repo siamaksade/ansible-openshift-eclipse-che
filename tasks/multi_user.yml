@@ -82,8 +82,18 @@
     che_access_token_bearer: "{{ che_access_token_result.json | json_query('access_token') }}"
 
 - include_tasks: add_stack_multi.yml
-  when: install_java_oc_stack|bool
+  vars:
+    stack_json: "{{ lookup('file','files/che-stack.json') }}"
 
+- include_tasks: add_stack_multi.yml
+  vars:
+    stack_json: "{{ item }}"
+  loop: "{{ install_custom_stacks_json }}"
+  when:
+    - install_custom_stacks_json is defined
+    - install_custom_stacks_json is not none
+    - install_custom_stacks_json|trim() != ""
+  
 - name: pre-create {{ che_generate_user_count }} users in che realm with format ({{ che_generate_user_format }})
   uri:
     url: http://keycloak-{{ project_name }}.{{ route_suffix }}/auth/admin/realms/che/users

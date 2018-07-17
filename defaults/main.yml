@@ -31,4 +31,6 @@ che_generate_user_count: 0
 che_generate_user_format: "user%d"
 che_generate_user_password: password
 
+# url to the custom stack e.g. http://raw.github.com/stack.json
 install_java_oc_stack: false
+install_custom_stacks_json: 

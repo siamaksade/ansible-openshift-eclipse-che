@@ -27,6 +27,7 @@ Role Variables
 |`che_generate_user_format`   | `user%d`           | Optional | For multi-user mode, format for the usernames for the users to be pre-created in che realm |
 |`che_generate_user_password` | `password`         | Optional | For multi-user mode, password for the users to be pre-created in che realm |
 |`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
+|`install_custom_stacks_json` | -                  | Optional | Install custom stacks. The value is a list of stack jsons |
 |`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
 
 
@@ -42,4 +43,5 @@ tasks:
   vars:
     project_name: "ide"
     che_version: "latest"
+    install_custom_stacks_json: [ "{{ lookup('file','files/custom-stack.json') }}" ]
 ```

@@ -1,10 +1,10 @@
 ---
-## Add Java and OpenShift CLI Stack
+## add stack
 
-- name: create custom stack for jdk and openshift cli
+- name: add stack
   uri:
     url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
     method: POST
-    body: "{{ lookup('file','files/che-stack.json') }}"
+    body: "{{ stack_json }}"
     body_format: json
     status_code: 200,201
