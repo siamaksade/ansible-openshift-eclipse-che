@@ -1,60 +1,27 @@
 ---
-- name: install jdk with openshift cli stack
-  block:
-    - uri:
-        url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
-        method: POST
-        body: "{{ lookup('file','files/che-stack.json') }}"
-        body_format: json
-        status_code: 200,201
-        headers:
-          Authorization: "Bearer {{ che_access_token_bearer }}"
-      register: stack_json
-    - set_fact:
-        stack_id: "{{ stack_json.json|json_query('id') }}"
-    - uri:
-        url: http://che-{{ project_name }}.{{ route_suffix }}/api/permissions
-        method: POST
-        body: "{{ lookup('template','che-permissions.json.j2') }}"
-        body_format: json
-        status_code: 204
-        headers:
-          Authorization: "Bearer {{ che_access_token_bearer }}"
-      vars:
-        stack_id: "{{ stack_id }}"
-  when: install_java_oc_stack|bool
+## add a stack and set permissions
+- name: add stack
+  uri:
+    url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
+    method: POST
+    body: "{{ stack_json }}"
+    body_format: json
+    status_code: 200,201
+    headers:
+      Authorization: "Bearer {{ che_access_token_bearer }}"
+  register: stack_json_result
 
-- name: install custom stack
-  block:
-    - uri:
-        url: "{{ install_custom_stack }}"
-        method: GET
-        body_format: json
-        status_code: 200,201
-        register: custom_stack_result
-      register: stack_json
-    - uri:
-        url: http://che-{{ project_name }}.{{ route_suffix }}/api/stack
-        method: POST
-        body: "{{ custom_stack_result.json }}"
-        body_format: json
-        status_code: 200,201
-        headers:
-          Authorization: "Bearer {{ che_access_token_bearer }}"
-      register: stack_json
-    - set_fact:
-        stack_id: "{{ stack_json.json|json_query('id') }}"
-    - uri:
-        url: http://che-{{ project_name }}.{{ route_suffix }}/api/permissions
-        method: POST
-        body: "{{ lookup('template','che-permissions.json.j2') }}"
-        body_format: json
-        status_code: 204
-        headers:
-          Authorization: "Bearer {{ che_access_token_bearer }}"
-      vars:
-        stack_id: "{{ stack_id }}"
-  when:
-    - install_custom_stack is defined
-    - install_custom_stack is not none
-    - install_custom_stack|trim() != ""
+- set_fact:
+    stack_id: "{{ stack_json_result.json|json_query('id') }}"
+
+- name: give all users access to the stack
+  uri:
+    url: http://che-{{ project_name }}.{{ route_suffix }}/api/permissions
+    method: POST
+    body: "{{ lookup('template','che-permissions.json.j2') }}"
+    body_format: json
+    status_code: 204
+    headers:
+      Authorization: "Bearer {{ che_access_token_bearer }}"
+  vars:
+    stack_id: "{{ stack_id }}"

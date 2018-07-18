@@ -18,3 +18,15 @@
   ignore_errors: true
 
 - include_tasks: add_stack_single.yml
+  vars:
+    stack_json: "{{ lookup('file','files/che-stack.json') }}"
+  when: install_java_oc_stack|bool
+
+- include_tasks: add_stack_single.yml
+  vars:
+    stack_json: "{{ item }}"
+  loop: "{{ install_custom_stacks_json }}"
+  when:
+    - install_custom_stacks_json is defined
+    - install_custom_stacks_json is not none
+    - install_custom_stacks_json|trim() != ""
