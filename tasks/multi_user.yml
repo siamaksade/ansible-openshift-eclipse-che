@@ -84,6 +84,7 @@
 - include_tasks: add_stack_multi.yml
   vars:
     stack_json: "{{ lookup('file','files/che-stack.json') }}"
+  when: install_java_oc_stack|bool
 
 - include_tasks: add_stack_multi.yml
   vars:
