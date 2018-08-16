@@ -32,7 +32,7 @@
 
 # import eclispe che template
 - name: import eclipse che template
-  shell: "{{ openshift_cli }} apply -f https://raw.githubusercontent.com/minishift/minishift-addons/master/add-ons/che/templates/che-single-user.yml -n {{ project_name }}"
+  shell: "{{ openshift_cli }} apply -f https://raw.githubusercontent.com/minishift/minishift/master/addons/che/templates/che-single-user.yml -n {{ project_name }}"
 
 # install eclipse che
 - name: deploy eclipse che template
