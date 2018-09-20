@@ -21,7 +21,7 @@
       uri:
         url: http://che-{{ project_name }}.{{ route_suffix }}/api/factory
         method: POST
-        body: "{{ lookup( ' template', install_factory_template_filename ) }}"
+        body: "{{ lookup( 'template', install_factory_template_filename ) }}"
         body_format: json
         status_code: 200,201
         headers:
