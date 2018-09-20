@@ -21,10 +21,11 @@
       uri:
         url: http://che-{{ project_name }}.{{ route_suffix }}/api/factory
         method: POST
-        body: "{{ install_custom_factory_json }}"
+        body: "{{ lookup( ' template', install_factory_template_filename ) }}"
         body_format: json
         status_code: 200,201
         headers:
           Authorization: "Bearer {{ user_access_token_bearer }}"
       vars:
         username: "{{ my_user }}"
+        password: "{{ che_generate_user_password }}"
