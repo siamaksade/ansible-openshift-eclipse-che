@@ -8,6 +8,7 @@
 - name: deploy keycloak
   shell: |
     {{ openshift_cli }} process -f {{ che_templates_base }}/multi/keycloak-template.yaml \
+        -p CHE_VERSION={{ che_version }} \
         -p ROUTING_SUFFIX={{ route_suffix }} \
         -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
         -p KEYCLOAK_USER={{ keycloak_admin_user }} \
@@ -104,7 +105,7 @@
     method: POST
     body: "{{ lookup('template','che-user.json.j2') }}"
     body_format: json
-    status_code: 201
+    status_code: 201,409
     headers:
       Authorization: "Bearer {{ master_access_token_bearer }}"
       Content-Type: "application/json"
@@ -116,3 +117,12 @@
     password: "{{ che_generate_user_password }}"
   with_sequence: start={{ che_generate_user_count|int if che_generate_user_count|int < 1 else 1}} end={{ che_generate_user_count }} format={{ che_generate_user_format }}
   when: che_generate_user_count|int > 0
+
+- name: add factory to users
+  include_tasks: add_factory_multi.yml
+  with_sequence: start={{ che_generate_user_count|int if che_generate_user_count|int < 1 else 1}} end={{ che_generate_user_count }} format={{ che_generate_user_format }}
+  when: 
+    - che_generate_user_count|int > 0
+    - install_custom_factory_json is defined
+    - install_custom_factory_json is not none
+    - install_custom_factory_json|trim() != ""
