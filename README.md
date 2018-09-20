@@ -28,8 +28,9 @@ Role Variables
 |`che_generate_user_password` | `password`         | Optional | For multi-user mode, password for the users to be pre-created in che realm |
 |`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
 |`install_custom_stacks_json` | -                  | Optional | Install custom stacks. The value is a list of stack jsons |
-|`install_custom_factory_json` | -                  | Optional | Install custom factories for every user. The value is a single factory json file |
-|`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
+|`install_custom_factory_json` | -                  | Optional | Install custom factories for every user. The value is a single factory in json format |
+|`install_custom_factory_filename` | -              | Optional | Install custom factories for every user. It loads the value processing it as a template |
+|`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) |
 
 
 Example Playbook
@@ -45,7 +46,7 @@ tasks:
     project_name: "ide"
     che_version: "latest"
     install_custom_stacks_json: [ "{{ lookup('file','files/custom-stack.json') }}" ]
-    install_custom_factory_json: [ "{{ lookup('template','che-factory.json.j2') }}" ]
+    install_custom_factory_json: "{{ lookup('template','che-factory.json.j2') }}"
 ```
 
 __NOTE:__ In the previous example, the factory json template will be processed in the calling playbook, when loaded.
@@ -59,7 +60,7 @@ ansible-playbook tests/test.yml \
         -e route_suffix=apps.example.com \
         -e multi_user=true \
         -e che_generate_user_count=2 \
-        -e install_custom_factory_json=templates/che-factory.json.j2.example
+        -e install_custom_factory_filename="che-factory.json.j2.example"
 ```
 
 __NOTE:__ Add as many parameter variations from the defaults as you want

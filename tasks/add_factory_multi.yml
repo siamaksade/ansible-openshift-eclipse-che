@@ -17,11 +17,11 @@
     - set_fact:
         user_access_token_bearer: "{{ user_access_token_result.json | json_query('access_token') }}"
 
-    - name: 
+    - name: Install factory from json content
       uri:
         url: http://che-{{ project_name }}.{{ route_suffix }}/api/factory
         method: POST
-        body: "{{ lookup('template', install_custom_factory_json) }}"
+        body: "{{ install_custom_factory_json }}"
         body_format: json
         status_code: 200,201
         headers:
