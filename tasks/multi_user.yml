@@ -5,7 +5,7 @@
   shell: "{{ openshift_cli }} process -f {{ che_templates_base }}/multi/postgres-template.yaml -p CHE_VERSION={{ che_version }} -l app=che -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}"
   ignore_errors: true
 
-- name: deploy keycloak
+- name: deploy keycloak (version <= 6.10)
   shell: |
     {{ openshift_cli }} process -f {{ che_templates_base }}/multi/keycloak-template.yaml \
         -p CHE_VERSION={{ che_version }} \
@@ -15,7 +15,22 @@
         -p KEYCLOAK_PASSWORD={{ keycloak_admin_pwd }} \
         -l app=che \
         -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}
+  when: che_version is version('6.10.0', '<=')
   ignore_errors: true
+
+- name: deploy keycloak (version >= 6.11)
+  shell: |
+    {{ openshift_cli }} process -f {{ che_templates_base }}/multi/keycloak-template.yaml \
+        -p KEYCLOAK_IMAGE_TAG={{ che_version }} \
+        -p ROUTING_SUFFIX={{ route_suffix }} \
+        -p CHE_KEYCLOAK_ADMIN_REQUIRE_UPDATE_PASSWORD=false \
+        -p KEYCLOAK_USER={{ keycloak_admin_user }} \
+        -p KEYCLOAK_PASSWORD={{ keycloak_admin_pwd }} \
+        -l app=che \
+        -n {{ project_name }} | {{ openshift_cli }} create -f - -n {{ project_name }}
+  when: che_version is version('6.11.0', '>=')        
+  ignore_errors: true
+
 
 - name: wait for keycloak to be running
   uri:
