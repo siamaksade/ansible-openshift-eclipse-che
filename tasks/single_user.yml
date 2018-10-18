@@ -17,5 +17,14 @@
     {{ openshift_cli }} set resources dc/che --requests=cpu=200m,memory=512Mi --limits=cpu=2,memory=2Gi -n {{ project_name }}
   ignore_errors: true
 
+- name: wait for che to be running
+  uri:
+    url: http://che-{{ project_name }}.{{ route_suffix }}/api/system/state
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 30
+  
 - include_tasks: add_stack_single.yml
   when: install_java_oc_stack|bool
