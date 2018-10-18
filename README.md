@@ -11,8 +11,8 @@ Role Variables
 | Variable                    | Default Value     | Required |  Description   |
 |-----------------------------|--------------------|----------|----------------|
 |`route_suffix`               | `127.0.0.1.nip.io` | Required | Apps route suffix in the OpenShift cluster |
-|`che_version`                | `latest`           | Optional | Eclipse Che image version as available on [Docker Hub](https://hub.docker.com/r/eclipse/che/tags/) |
-|`project_name`               | `che`              | Optional | OpenShift project name for the Gogs container  |
+|`che_version`                | `6.7.1`            | Optional | Eclipse Che image version as available on [Docker Hub](https://hub.docker.com/r/eclipse/che/tags/) |
+|`project_name`               | ` eclipse-che`     | Optional | OpenShift project name for the Gogs container  |
 |`project_display_name`       | `Eclipse Che IDE`  | Optional | OpenShift project display name for the Gogs container  |
 |`project_desc`               | `Eclipse Che IDE`  | Optional | OpenShift project description for the Gogs container |
 |`project_annotations`        | -                  | Optional | OpenShift project annotations for the Gogs container |
@@ -28,7 +28,8 @@ Role Variables
 |`che_generate_user_password` | `password`         | Optional | For multi-user mode, password for the users to be pre-created in che realm |
 |`install_java_oc_stack`      | `false`            | Optional | Install a Java stack with Maven, OpenShift CLI and Ansible |
 |`install_custom_stacks_json` | -                  | Optional | Install custom stacks. The value is a list of stack jsons |
-|`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) | 
+|`install_factory_template_filename` | -           | Optional | Install custom factory for every user. It loads the value processing it as a template |
+|`openshift_cli`              | `oc`               | Optional | OpenShift CLI command and arguments (e.g. auth) |
 
 
 Example Playbook
@@ -44,4 +45,21 @@ tasks:
     project_name: "ide"
     che_version: "latest"
     install_custom_stacks_json: [ "{{ lookup('file','files/custom-stack.json') }}" ]
+    install_factory_template_filename: "che-factory.json.j2"
 ```
+
+__NOTE:__ In the previous example, the factory json template will be processed in the calling playbook, when loaded.
+
+Test locally
+------------
+If you want to test this role locally:
+
+```
+ansible-playbook tests/test.yml \
+        -e route_suffix=apps.example.com \
+        -e multi_user=true \
+        -e che_generate_user_count=2 \
+        -e install_factory_template_filename="che-factory.json.j2.example"
+```
+
+__NOTE:__ Add as many parameter variations from the defaults as you want

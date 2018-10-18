@@ -1,5 +1,5 @@
 ---
-che_version: latest
+che_version: 6.7.1
 
 che_templates_ref: "{{ 'master' if che_version == 'latest' else che_version }}"
 che_templates_base: https://raw.githubusercontent.com/eclipse/che/{{ che_templates_ref }}/deploy/openshift/templates
